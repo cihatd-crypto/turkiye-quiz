@@ -7,7 +7,7 @@
 <style>
 body{font-family:Arial;background:#f4f6f8;padding:20px}
 body.dark{background:#121212;color:#eee}
-.box{max-width:800px;margin:auto;background:#fff;padding:20px;border-radius:12px}
+.box{max-width:900px;margin:auto;background:#fff;padding:20px;border-radius:12px}
 body.dark .box{background:#1e1e1e}
 input{width:100%;padding:10px;margin:10px 0}
 .option{padding:12px;margin:8px 0;background:#e9ecef;border-radius:6px;cursor:pointer}
@@ -18,16 +18,21 @@ body.dark .option{background:#2a2a2a}
 .top{display:flex;justify-content:space-between}
 button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
 .result{text-align:center;font-size:20px}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{border:1px solid #ccc;padding:8px;text-align:center}
+body.dark th,body.dark td{border-color:#444}
 </style>
 </head>
 <body>
 
+<!-- GİRİŞ -->
 <div class="box" id="login">
   <h2>KPSS Genel Kültür Deneme</h2>
   <input id="name" placeholder="Ad Soyad">
   <button onclick="start()">Sınava Başla</button>
 </div>
 
+<!-- QUIZ -->
 <div class="box" id="quiz" style="display:none">
   <div class="top">
     <b id="timer">Süre: 20</b>
@@ -41,11 +46,12 @@ button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
 let username="";
 let current=0,score=0,time=20,timer;
 let wrong=[];
+let startTime;
 
-let questions=[
 
-  
-  // ===== TARİH (1–35) =====
+let questions = [
+
+// ===== TARİH (1–35) =====
 {q:"Türkiye Cumhuriyeti'nin başkenti neresidir?",options:["İstanbul","Ankara","İzmir","Bursa"],answer:1},
 {q:"TBMM hangi yıl açılmıştır?",options:["1919","1920","1921","1923"],answer:1},
 {q:"Cumhuriyet hangi tarihte ilan edilmiştir?",options:["23 Nisan 1920","19 Mayıs 1919","30 Ağustos 1922","29 Ekim 1923"],answer:3},
@@ -144,19 +150,19 @@ let questions=[
 {q:"Türkiye'de yasalar Resmi Gazete'de yayımlandıktan sonra ne olur?",options:["İptal","Yürürlüğe girer","Askıya alınır","Mahkemeye gider"],answer:1},
 {q:"KPSS hangi amaçla yapılır?",options:["Akademik","Askeri","Kamu personeli","Özel sektör"],answer:2}
 
-  
 ];
 
-  
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 
 function start(){
   let n=document.getElementById("name").value.trim();
   if(!n){alert("Ad Soyad giriniz");return;}
   username=n;
+  startTime=Date.now();
   document.getElementById("login").style.display="none";
   document.getElementById("quiz").style.display="block";
-  shuffle(questions);load();
+  shuffle(questions);
+  load();
 }
 
 function startTimer(){
@@ -199,15 +205,49 @@ function select(i){
 }
 
 function finish(){
-  let p=Math.round((score/100)*100);
-  document.getElementById("quiz").innerHTML=
-  `<div class="result">
-   👤 ${username}<br><br>
-   ✔️ Doğru: ${score}<br>
-   ❌ Yanlış: ${100-score}<br>
-   🏁 Puan: <b>${p}</b><br><br>
-   <b>Yanlış Sorular:</b><br>${wrong.join("<br>")||"Yok"}<br><br>
-   <button onclick="location.reload()">🔄 Tekrar Çöz</button>
+  let duration=Math.round((Date.now()-startTime)/60000);
+  let puan=Math.round((score/100)*100);
+
+  let table=JSON.parse(localStorage.getItem("scores")||"[]");
+  table.unshift({
+    name:username,
+    puan:puan,
+    dogru:score,
+    yanlis:100-score,
+    sure:duration+" dk"
+  });
+  localStorage.setItem("scores",JSON.stringify(table));
+
+  let rows=table.map(s=>
+    `<tr>
+      <td>${s.name}</td>
+      <td>${s.puan}</td>
+      <td>${s.dogru}</td>
+      <td>${s.yanlis}</td>
+      <td>${s.sure}</td>
+    </tr>`
+  ).join("");
+
+  document.getElementById("quiz").innerHTML=`
+  <div class="result">
+    👤 ${username}<br><br>
+    ✔️ Doğru: ${score}<br>
+    ❌ Yanlış: ${100-score}<br>
+    🏁 Puan: <b>${puan}</b><br>
+    ⏱ Süre: ${duration} dk<br><br>
+    <button onclick="location.reload()">🔄 Tekrar Çöz</button>
+
+    <h3>📊 Skor Tablosu</h3>
+    <table>
+      <tr>
+        <th>Ad Soyad</th>
+        <th>Puan</th>
+        <th>Doğru</th>
+        <th>Yanlış</th>
+        <th>Süre</th>
+      </tr>
+      ${rows}
+    </table>
   </div>`;
 }
 
