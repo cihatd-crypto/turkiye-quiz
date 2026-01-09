@@ -7,114 +7,211 @@
 <style>
 body{font-family:Arial;background:#f4f6f8;padding:20px}
 body.dark{background:#121212;color:#eee}
-.quiz-box{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:12px}
-body.dark .quiz-box{background:#1e1e1e}
-.top{display:flex;justify-content:space-between}
+.box{max-width:800px;margin:auto;background:#fff;padding:20px;border-radius:12px}
+body.dark .box{background:#1e1e1e}
+input{width:100%;padding:10px;margin:10px 0}
 .option{padding:12px;margin:8px 0;background:#e9ecef;border-radius:6px;cursor:pointer}
 body.dark .option{background:#2a2a2a}
 .option.correct{background:#9be7a1}
 .option.wrong{background:#f3a6a6}
 .option.disabled{pointer-events:none}
+.top{display:flex;justify-content:space-between}
+button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
 .result{text-align:center;font-size:20px}
-button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer}
 </style>
 </head>
 <body>
 
-<div class="quiz-box" id="quiz">
+<div class="box" id="login">
+  <h2>KPSS Genel Kültür Deneme</h2>
+  <input id="name" placeholder="Ad Soyad">
+  <button onclick="start()">Sınava Başla</button>
+</div>
+
+<div class="box" id="quiz" style="display:none">
   <div class="top">
-    <b id="timer">Süre: 15</b>
+    <b id="timer">Süre: 20</b>
     <button onclick="toggleDark()">🌙</button>
   </div>
-  <h2 id="question"></h2>
+  <h3 id="question"></h3>
   <div id="options"></div>
 </div>
 
 <script>
+let username="";
+let current=0,score=0,time=20,timer;
+let wrong=[];
+
 let questions=[
+
+  
+  // ===== TARİH (1–35) =====
 {q:"Türkiye Cumhuriyeti'nin başkenti neresidir?",options:["İstanbul","Ankara","İzmir","Bursa"],answer:1},
 {q:"TBMM hangi yıl açılmıştır?",options:["1919","1920","1921","1923"],answer:1},
-{q:"Lozan Antlaşması hangi yıl imzalanmıştır?",options:["1920","1921","1922","1923"],answer:3},
-{q:"Atatürk hangi ilde doğmuştur?",options:["İstanbul","Selanik","Manastır","Sofya"],answer:1},
-{q:"Türkiye'nin en uzun nehri hangisidir?",options:["Fırat","Dicle","Kızılırmak","Sakarya"],answer:2},
-{q:"Türkiye kaç bölgeden oluşur?",options:["5","6","7","8"],answer:2},
-{q:"Cumhuriyet hangi tarihte ilan edilmiştir?",options:["23 Nisan 1920","30 Ağustos 1922","29 Ekim 1923","19 Mayıs 1919"],answer:2},
-{q:"İstiklal Marşı'nın yazarı kimdir?",options:["Ziya Gökalp","Mehmet Akif Ersoy","Yahya Kemal","Tevfik Fikret"],answer:1},
-{q:"İstiklal Marşı hangi yıl kabul edilmiştir?",options:["1920","1921","1922","1923"],answer:1},
-{q:"Türkiye'nin en büyük ili hangisidir?",options:["Konya","Ankara","Antalya","Sivas"],answer:0},
-
-{q:"Türkiye'nin en kalabalık ili hangisidir?",options:["Ankara","İzmir","İstanbul","Bursa"],answer:2},
-{q:"Halifelik hangi yıl kaldırılmıştır?",options:["1922","1923","1924","1925"],answer:2},
+{q:"Cumhuriyet hangi tarihte ilan edilmiştir?",options:["23 Nisan 1920","19 Mayıs 1919","30 Ağustos 1922","29 Ekim 1923"],answer:3},
 {q:"Saltanat hangi yıl kaldırılmıştır?",options:["1920","1921","1922","1923"],answer:2},
+{q:"Halifelik hangi yıl kaldırılmıştır?",options:["1922","1923","1924","1925"],answer:2},
+{q:"Lozan Antlaşması hangi yıl imzalanmıştır?",options:["1920","1921","1922","1923"],answer:3},
+{q:"İstiklal Marşı hangi yıl kabul edilmiştir?",options:["1920","1921","1922","1923"],answer:1},
+{q:"İstiklal Marşı'nın yazarı kimdir?",options:["Ziya Gökalp","Mehmet Akif Ersoy","Yahya Kemal","Tevfik Fikret"],answer:1},
+{q:"Atatürk hangi şehirde doğmuştur?",options:["İstanbul","Selanik","Manastır","Sofya"],answer:1},
+{q:"Misak-ı Milli kararları nerede kabul edilmiştir?",options:["Sivas","Erzurum","TBMM","Amasya"],answer:2},
+{q:"Şapka Kanunu hangi yıl çıkarılmıştır?",options:["1924","1925","1926","1927"],answer:1},
+{q:"Tevhid-i Tedrisat Kanunu hangi yıl çıkarılmıştır?",options:["1923","1924","1925","1926"],answer:1},
+{q:"Türk Tarih Kurumu hangi yıl kurulmuştur?",options:["1930","1931","1932","1933"],answer:1},
 {q:"Türk Dil Kurumu hangi yıl kurulmuştur?",options:["1931","1932","1933","1934"],answer:1},
+{q:"İlk çok partili seçim hangi yıl yapılmıştır?",options:["1930","1946","1950","1960"],answer:1},
+{q:"Kabotaj Kanunu hangi yıl çıkarılmıştır?",options:["1923","1924","1925","1926"],answer:3},
+{q:"Ankara hangi yıl başkent olmuştur?",options:["1920","1921","1923","1925"],answer:2},
+{q:"Atatürk ilkeleri kaç tanedir?",options:["4","5","6","7"],answer:2},
+{q:"Devletçilik ilkesi hangi alana yöneliktir?",options:["Eğitim","Ekonomi","Hukuk","Din"],answer:1},
+{q:"İnkılapçılık neyi ifade eder?",options:["Gelenek","Değişim","Din","Milliyet"],answer:1},
 {q:"Medeni Kanun hangi ülkeden alınmıştır?",options:["Fransa","Almanya","İsviçre","İtalya"],answer:2},
-{q:"Türkiye NATO'ya hangi yıl üye olmuştur?",options:["1949","1950","1952","1955"],answer:2},
+{q:"Soyadı Kanunu hangi yıl çıkarılmıştır?",options:["1932","1933","1934","1935"],answer:2},
+{q:"Kadınlara seçme-seçilme hakkı hangi yıl verilmiştir?",options:["1930","1933","1934","1935"],answer:2},
+{q:"İlk kadın milletvekilleri hangi yıl meclise girmiştir?",options:["1933","1934","1935","1936"],answer:2},
+{q:"Atatürk'ün Samsun'a çıkışı hangi tarihtir?",options:["19 Mayıs 1919","23 Nisan 1920","30 Ağustos 1922","29 Ekim 1923"],answer:0},
+{q:"Mondros Ateşkes Antlaşması hangi yıl imzalanmıştır?",options:["1917","1918","1919","1920"],answer:1},
+{q:"Sevr Antlaşması hangi yıl imzalanmıştır?",options:["1919","1920","1921","1922"],answer:1},
+{q:"İlk TBMM Hükümeti hangi sistemle yönetilmiştir?",options:["Monarşi","Meclis Hükümeti","Parlamenter","Başkanlık"],answer:1},
+{q:"Atatürk'ün Nutuk'u hangi yıl okunmuştur?",options:["1925","1926","1927","1928"],answer:2},
+{q:"Atatürk'ün ölüm tarihi hangisidir?",options:["10 Kasım 1938","29 Ekim 1938","19 Mayıs 1938","23 Nisan 1938"],answer:0},
+{q:"Cumhuriyetin ilk anayasası hangisidir?",options:["1921","1924","1961","1982"],answer:0},
+{q:"1924 Anayasası hangi ilkeyi esas almıştır?",options:["Kuvvetler Birliği","Kuvvetler Ayrılığı","Başkanlık","Monarşi"],answer:0},
+{q:"Takvim, saat ve ölçüler hangi alanda yapılan inkılaptır?",options:["Hukuk","Ekonomi","Sosyal","Eğitim"],answer:2},
+{q:"İlk beş yıllık kalkınma planı hangi yıl başlamıştır?",options:["1950","1960","1963","1970"],answer:2},
+
+// ===== COĞRAFYA (36–65) =====
+{q:"Türkiye kaç bölgeden oluşur?",options:["5","6","7","8"],answer:2},
+{q:"Türkiye'nin en uzun nehri hangisidir?",options:["Fırat","Dicle","Kızılırmak","Sakarya"],answer:2},
 {q:"Türkiye'nin en yüksek dağı hangisidir?",options:["Erciyes","Kaçkar","Ağrı","Süphan"],answer:2},
 {q:"Türkiye'nin en büyük gölü hangisidir?",options:["Tuz","Van","Beyşehir","Eğirdir"],answer:1},
-{q:"Ankara hangi yıl başkent olmuştur?",options:["1920","1921","1923","1925"],answer:2},
-{q:"Kabotaj Kanunu hangi yıl çıkarılmıştır?",options:["1923","1924","1925","1926"],answer:3}
+{q:"Türkiye'nin en kalabalık ili hangisidir?",options:["Ankara","İzmir","İstanbul","Bursa"],answer:2},
+{q:"Yüzölçümü en büyük il hangisidir?",options:["Konya","Sivas","Ankara","Antalya"],answer:0},
+{q:"Türkiye'nin en doğudaki ili hangisidir?",options:["Van","Ağrı","Iğdır","Hakkari"],answer:2},
+{q:"Türkiye'nin en batıdaki ili hangisidir?",options:["İzmir","Muğla","Çanakkale","Edirne"],answer:3},
+{q:"En fazla yağış alan bölge hangisidir?",options:["Karadeniz","Akdeniz","Ege","Doğu Anadolu"],answer:0},
+{q:"Akdeniz ikliminde en belirgin özellik nedir?",options:["Kışlar sert","Yazlar yağışlı","Yazlar kurak","Her mevsim yağış"],answer:2},
+{q:"Türkiye'de en fazla nüfus hangi bölgede yaşar?",options:["Ege","Marmara","Akdeniz","İç Anadolu"],answer:1},
+{q:"Türkiye'nin üç tarafını çevreleyen denizlerden biri değildir?",options:["Karadeniz","Ege","Akdeniz","Hazar"],answer:3},
+{q:"Türkiye'nin en büyük barajı hangisidir?",options:["Keban","Atatürk","Karakaya","Hirfanlı"],answer:1},
+{q:"Kapadokya hangi bölgemizdedir?",options:["Ege","İç Anadolu","Akdeniz","Karadeniz"],answer:1},
+{q:"Pamukkale hangi ilimizdedir?",options:["Aydın","Muğla","Denizli","Uşak"],answer:2},
+{q:"Türkiye'de karstik şekiller en çok nerede görülür?",options:["Ege","Akdeniz","Karadeniz","Doğu Anadolu"],answer:1},
+{q:"Delta ovaları en çok hangi kıyıda görülür?",options:["Karadeniz","Ege","Akdeniz","Marmara"],answer:1},
+{q:"Türkiye'nin en uzun kıyı şeridi hangi bölgededir?",options:["Karadeniz","Ege","Akdeniz","Marmara"],answer:1},
+{q:"İstanbul ve Çanakkale Boğazları hangi denizleri bağlar?",options:["Karadeniz-Akdeniz","Ege-Akdeniz","Karadeniz-Marmara","Marmara-Ege"],answer:3},
+{q:"Fırat ve Dicle hangi denize dökülür?",options:["Akdeniz","Basra Körfezi","Hazar","Karadeniz"],answer:1},
+{q:"Türkiye'de en fazla elektrik hangi kaynaktan üretilir?",options:["Güneş","Rüzgar","HES","Nükleer"],answer:2},
+{q:"Türkiye'nin en büyük adası hangisidir?",options:["Gökçeada","Bozcaada","Marmara","Avşa"],answer:0},
+{q:"Akarsu aşındırma şekillerinden biri hangisidir?",options:["Delta","Menderes","Birikinti konisi","Traverten"],answer:1},
+{q:"Karadeniz kıyılarında falezlerin yaygın olma nedeni nedir?",options:["Yağış","Dağların kıyıya paralel uzanması","Rüzgar","Akıntı"],answer:1},
+{q:"Türkiye'de volkanik dağlardan biri değildir?",options:["Erciyes","Hasan","Nemrut","Uludağ"],answer:3},
+{q:"Ege Bölgesi'nin en önemli tarım ürünü hangisidir?",options:["Buğday","Zeytin","Çay","Pamuk"],answer:1},
+{q:"Çay tarımı en çok hangi ilde yapılır?",options:["Rize","Trabzon","Ordu","Artvin"],answer:0},
+{q:"Türkiye'nin en büyük ovası hangisidir?",options:["Konya","Çukurova","Gediz","Amik"],answer:0},
+{q:"Doğu Anadolu'nun en önemli geçim kaynağı nedir?",options:["Tarım","Sanayi","Hayvancılık","Turizm"],answer:2},
+
+// ===== VATANDAŞLIK + GÜNCEL (66–100) =====
+{q:"Türkiye Cumhuriyeti'nin yönetim şekli nedir?",options:["Monarşi","Cumhuriyet","Oligarşi","Teokrasi"],answer:1},
+{q:"Anayasa Mahkemesi kaç üyeden oluşur?",options:["11","13","15","17"],answer:3},
+{q:"Yasama yetkisi kime aittir?",options:["Cumhurbaşkanı","TBMM","Yargı","Bakanlar"],answer:1},
+{q:"Yürütme yetkisi kimdedir?",options:["TBMM","Cumhurbaşkanı","Yargıtay","Danıştay"],answer:1},
+{q:"Yargı yetkisi hangi organ tarafından kullanılır?",options:["TBMM","Cumhurbaşkanı","Bağımsız mahkemeler","HSK"],answer:2},
+{q:"Seçimler kaç yılda bir yapılır?",options:["4","5","6","7"],answer:1},
+{q:"Türkiye NATO'ya hangi yıl üye olmuştur?",options:["1949","1950","1952","1955"],answer:2},
+{q:"Birleşmiş Milletler kaç yılında kurulmuştur?",options:["1943","1944","1945","1946"],answer:2},
+{q:"Türkiye'nin para birimi nedir?",options:["Euro","Dolar","Lira","Sterlin"],answer:2},
+{q:"TBMM'nin açıldığı gün hangi bayramdır?",options:["Cumhuriyet","Gençlik","Ulusal Egemenlik","Zafer"],answer:2},
+{q:"Cumhurbaşkanı kaç yıllığına seçilir?",options:["4","5","6","7"],answer:1},
+{q:"Türkiye'nin ilk kadın başbakanı kimdir?",options:["Meral Akşener","Tansu Çiller","Fatma Şahin","Aysel Çelikel"],answer:1},
+{q:"OHAL ilan etme yetkisi kimdedir?",options:["TBMM","Cumhurbaşkanı","Vali","Mahkeme"],answer:1},
+{q:"Türkiye'nin ilk uydusu hangisidir?",options:["Bilsat","Göktürk","Türksat 1A","Türksat 1B"],answer:2},
+{q:"E-Devlet hangi amaçla kullanılır?",options:["Eğlence","Haber","Kamu hizmeti","Sosyal medya"],answer:2},
+{q:"Türkiye'nin milli marşı hangisidir?",options:["Gençlik Marşı","İstiklal Marşı","10. Yıl Marşı","İzmir Marşı"],answer:1},
+{q:"Türkiye'nin resmi dili hangisidir?",options:["Osmanlıca","Türkçe","Arapça","Kürtçe"],answer:1},
+{q:"Laiklik ilkesi neyi ifade eder?",options:["Din özgürlüğü","Devlet-din ayrılığı","Milliyet","Hukuk"],answer:1},
+{q:"Anayasa değişikliği için gereken çoğunluk hangisidir?",options:["Salt","Basit","Nitelikli","Oybirliği"],answer:2},
+{q:"Türkiye'nin bayrağındaki ay-yıldız hangi renktedir?",options:["Siyah","Beyaz","Kırmızı","Mavi"],answer:1},
+{q:"Türkiye'nin yüzölçümü yaklaşık kaç km²'dir?",options:["600 bin","700 bin","780 bin","900 bin"],answer:2},
+{q:"Türkiye'de ilk üniversite hangisidir?",options:["Ankara","Ege","İstanbul","ODTÜ"],answer:2},
+{q:"Türkiye'nin milli sporu hangisidir?",options:["Güreş","Futbol","Atletizm","Okçuluk"],answer:0},
+{q:"Türkiye hangi kıtada yer alır?",options:["Avrupa","Asya","Avrupa-Asya","Afrika"],answer:2},
+{q:"Türkiye'nin telefon kodu kaçtır?",options:["80","81","90","92"],answer:2},
+{q:"Türkiye'nin alan kodu hangisidir?",options:["TR","TUR","TC","TK"],answer:0},
+{q:"Türkiye'nin en büyük ticaret ortağı hangi birliktir?",options:["NAFTA","AB","ASEAN","OPEC"],answer:1},
+{q:"Türkiye'nin resmi başkenti hangi yılda Ankara olmuştur?",options:["1921","1922","1923","1924"],answer:2},
+{q:"Türkiye'de yasalar Resmi Gazete'de yayımlandıktan sonra ne olur?",options:["İptal","Yürürlüğe girer","Askıya alınır","Mahkemeye gider"],answer:1},
+{q:"KPSS hangi amaçla yapılır?",options:["Akademik","Askeri","Kamu personeli","Özel sektör"],answer:2}
+
+  
 ];
 
-// ZAMAN & KONTROL
-let current=0,score=0,time=15,timer;
-const qEl=document.getElementById("question");
-const oEl=document.getElementById("options");
-const tEl=document.getElementById("timer");
-const quiz=document.getElementById("quiz");
-
+  
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 
+function start(){
+  let n=document.getElementById("name").value.trim();
+  if(!n){alert("Ad Soyad giriniz");return;}
+  username=n;
+  document.getElementById("login").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  shuffle(questions);load();
+}
+
 function startTimer(){
-clearInterval(timer);time=15;
-tEl.textContent="Süre: "+time;
-timer=setInterval(()=>{
-time--;tEl.textContent="Süre: "+time;
-if(time===0)select(-1);
-},1000)
+  clearInterval(timer);time=20;
+  document.getElementById("timer").textContent="Süre: "+time;
+  timer=setInterval(()=>{
+    time--;
+    document.getElementById("timer").textContent="Süre: "+time;
+    if(time===0)select(-1);
+  },1000);
 }
 
 function load(){
-if(current>=questions.length){finish();return;}
-startTimer();
-let q=questions[current];
-qEl.textContent=(current+1)+". "+q.q;
-oEl.innerHTML="";
-q.options.forEach((op,i)=>{
-let d=document.createElement("div");
-d.className="option";
-d.textContent=op;
-d.onclick=()=>select(i);
-oEl.appendChild(d);
-});
+  if(current>=questions.length){finish();return;}
+  startTimer();
+  let q=questions[current];
+  document.getElementById("question").textContent=(current+1)+"/100 - "+q.q;
+  let o=document.getElementById("options");
+  o.innerHTML="";
+  q.options.forEach((op,i)=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.textContent=op;
+    d.onclick=()=>select(i);
+    o.appendChild(d);
+  });
 }
 
 function select(i){
-clearInterval(timer);
-let q=questions[current];
-document.querySelectorAll(".option").forEach((d,idx)=>{
-d.classList.add("disabled");
-if(idx===q.answer)d.classList.add("correct");
-if(idx===i && i!==q.answer)d.classList.add("wrong");
-});
-if(i===q.answer)score++;
-setTimeout(()=>{current++;load()},1200);
+  clearInterval(timer);
+  let q=questions[current];
+  document.querySelectorAll(".option").forEach((d,idx)=>{
+    d.classList.add("disabled");
+    if(idx===q.answer)d.classList.add("correct");
+    if(idx===i && i!==q.answer)d.classList.add("wrong");
+  });
+  if(i===q.answer)score++;
+  else wrong.push(q.q);
+  setTimeout(()=>{current++;load()},1200);
 }
 
 function finish(){
-shuffle(questions);
-let puan=Math.round((score/questions.length)*100);
-quiz.innerHTML=`<div class='result'>
-🎉 Deneme Bitti<br><br>
-Doğru: ${score}<br>
-Yanlış: ${questions.length-score}<br>
-<b>Puan: ${puan}</b><br><br>
-<button onclick='location.reload()'>🔄 Tekrar Çöz</button>
-</div>`;
+  let p=Math.round((score/100)*100);
+  document.getElementById("quiz").innerHTML=
+  `<div class="result">
+   👤 ${username}<br><br>
+   ✔️ Doğru: ${score}<br>
+   ❌ Yanlış: ${100-score}<br>
+   🏁 Puan: <b>${p}</b><br><br>
+   <b>Yanlış Sorular:</b><br>${wrong.join("<br>")||"Yok"}<br><br>
+   <button onclick="location.reload()">🔄 Tekrar Çöz</button>
+  </div>`;
 }
 
 function toggleDark(){document.body.classList.toggle("dark")}
-
-shuffle(questions);load();
 </script>
 </body>
 </html>
