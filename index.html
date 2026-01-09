@@ -35,54 +35,103 @@
 </div>
 
 <script>
-<script>
 let questions = [
-  {
-  { q: "Türkiye Cumhuriyeti'nin başkenti neresidir?", options: ["İstanbul", "Ankara", "İzmir", "Bursa"], answer: 1 },
-  { q: "Türkiye Büyük Millet Meclisi hangi yıl açılmıştır?", options: ["1919", "1920", "1921", "1923"], answer: 1 },
-  { q: "Türkiye'nin en uzun nehri hangisidir?", options: ["Fırat", "Dicle", "Kızılırmak", "Sakarya"], answer: 2 },
-  { q: "Atatürk'ün doğduğu şehir neresidir?", options: ["Selanik", "İstanbul", "Manastır", "Sofya"], answer: 0 },
-  { q: "Türkiye'nin yüzölçümü en büyük ili hangisidir?", options: ["Konya", "Ankara", "Sivas", "Antalya"], answer: 0 },
-  { q: "Misak-ı Milli kararları hangi kongrede kabul edilmiştir?", options: ["Sivas", "Erzurum", "TBMM", "Amasya"], answer: 2 },
-  { q: "İlk çok partili seçim hangi yılda yapılmıştır?", options: ["1946", "1950", "1960", "1930"], answer: 0 },
-  { q: "Türkiye'nin en kalabalık ili hangisidir?", options: ["Ankara", "İzmir", "İstanbul", "Bursa"], answer: 2 },
-  { q: "Lozan Antlaşması hangi yıl imzalanmıştır?", options: ["1920", "1921", "1922", "1923"], answer: 3 },
-  { q: "İlk Türk alfabesi hangisidir?", options: ["Göktürk", "Uygur", "Arap", "Latin"], answer: 0 },
-
-  { q: "Türkiye'de en fazla yağış alan bölge hangisidir?", options: ["Karadeniz", "Akdeniz", "Ege", "Doğu Anadolu"], answer: 0 },
-  { q: "Türkiye'nin en yüksek dağı hangisidir?", options: ["Erciyes", "Kaçkar", "Ağrı", "Süphan"], answer: 2 },
-  { q: "Ankara hangi yıl başkent olmuştur?", options: ["1919", "1920", "1923", "1925"], answer: 2 },
-  { q: "Kabotaj Kanunu hangi yıl çıkarılmıştır?", options: ["1923", "1925", "1926", "1930"], answer: 2 },
-  { q: "Türkiye'nin ilk nüfus sayımı hangi yıl yapılmıştır?", options: ["1927", "1930", "1923", "1935"], answer: 0 },
-  { q: "Atatürk ilkelerini tamamlayan ilke hangisidir?", options: ["Cumhuriyetçilik", "Devletçilik", "İnkılapçılık", "Milliyetçilik"], answer: 2 },
-  { q: "Türkiye'nin en büyük gölü hangisidir?", options: ["Tuz Gölü", "Van Gölü", "Beyşehir", "Eğirdir"], answer: 1 },
-  { q: "İlk Türk kadın milletvekilleri hangi yıl seçilmiştir?", options: ["1930", "1933", "1934", "1935"], answer: 3 },
-  { q: "Saltanat hangi yıl kaldırılmıştır?", options: ["1920", "1921", "1922", "1923"], answer: 2 },
-  { q: "Halifelik hangi yıl kaldırılmıştır?", options: ["1922", "1923", "1924", "1925"], answer: 2 },
-
-  { q: "Türkiye'nin üç tarafını çevreleyen denizlerden biri değildir?", options: ["Karadeniz", "Ege", "Akdeniz", "Hazar"], answer: 3 },
-  { q: "Türk Dil Kurumu hangi yıl kurulmuştur?", options: ["1931", "1932", "1933", "1934"], answer: 1 },
-  { q: "Türk Tarih Kurumu hangi yıl kurulmuştur?", options: ["1930", "1931", "1932", "1933"], answer: 1 },
-  { q: "Medeni Kanun hangi ülkeden alınmıştır?", options: ["Almanya", "Fransa", "İsviçre", "İtalya"], answer: 2 },
-  { q: "Haftalık tatil hangi gün olarak kabul edilmiştir?", options: ["Cumartesi", "Cuma", "Pazar", "Pazartesi"], answer: 2 },
-  { q: "Türkiye NATO'ya hangi yıl üye olmuştur?", options: ["1949", "1950", "1952", "1955"], answer: 2 },
-  { q: "İlk beş yıllık kalkınma planı hangi yılda başlamıştır?", options: ["1950", "1960", "1963", "1970"], answer: 2 },
-  { q: "Atatürk'ün Samsun'a çıkışı hangi tarihtir?", options: ["19 Mayıs 1919", "23 Nisan 1920", "30 Ağustos 1922", "29 Ekim 1923"], answer: 0 },
-  { q: "Türkiye'nin en batıdaki ili hangisidir?", options: ["İzmir", "Çanakkale", "Edirne", "Muğla"], answer: 2 },
-  { q: "Türkiye'nin en doğudaki ili hangisidir?", options: ["Van", "Iğdır", "Ağrı", "Hakkari"], answer: 1 },
-
-  { q: "İstiklal Marşı'nın yazarı kimdir?", options: ["Mehmet Akif Ersoy", "Yahya Kemal", "Tevfik Fikret", "Ziya Gökalp"], answer: 0 },
-  { q: "İstiklal Marşı hangi yıl kabul edilmiştir?", options: ["1920", "1921", "1922", "1923"], answer: 1 },
-  { q: "Türkiye'nin en uzun kıyı şeridi hangi bölgededir?", options: ["Karadeniz", "Ege", "Akdeniz", "Marmara"], answer: 1 },
-  { q: "Cumhuriyet hangi tarihte ilan edilmiştir?", options: ["23 Nisan 1920", "29 Ekim 1923", "30 Ağustos 1922", "19 Mayıs 1919"], answer: 1 },
-  { q: "Türkiye'nin ilk kadın başbakanı kimdir?", options: ["Meral Akşener", "Tansu Çiller", "Fatma Şahin", "Aysel Çelikel"], answer: 1 },
-  { q: "Türkiye'de ilk üniversite hangisidir?", options: ["İstanbul Üniversitesi", "Ankara Üniversitesi", "Ege Üniversitesi", "ODTÜ"], answer: 0 },
-  { q: "Şapka Kanunu hangi yıl çıkarılmıştır?", options: ["1924", "1925", "1926", "1927"], answer: 1 },
-  { q: "Türkiye'nin en büyük barajı hangisidir?", options: ["Atatürk", "Keban", "Karakaya", "Hirfanlı"], answer: 0 },
-  { q: "Türkiye'nin ilk uydusu hangisidir?", options: ["Türksat 1B", "Bilsat", "Türksat 1A", "Göktürk"], answer: 2 },
-  { q: "Türkiye'de ilk kadın doktor kimdir?", options: ["Safiye Ali", "Halide Edip", "Afet İnan", "Latife Hanım"], answer: 0 }
-  }
+  { q: "Türkiye Cumhuriyeti'nin başkenti neresidir?", options: ["İstanbul","Ankara","İzmir","Bursa"], answer: 1 },
+  { q: "Türkiye Büyük Millet Meclisi hangi yıl açılmıştır?", options: ["1919","1920","1921","1923"], answer: 1 },
+  { q: "Türkiye'nin en uzun nehri hangisidir?", options: ["Fırat","Dicle","Kızılırmak","Sakarya"], answer: 2 },
+  { q: "Atatürk'ün doğduğu şehir neresidir?", options: ["Selanik","İstanbul","Manastır","Sofya"], answer: 0 },
+  { q: "Lozan Antlaşması hangi yıl imzalanmıştır?", options: ["1920","1921","1922","1923"], answer: 3 }
 ];
+
+let current = 0;
+let score = 0;
+let time = 15;
+let timerInterval;
+let wrongList = [];
+
+const qEl = document.getElementById("question");
+const oEl = document.getElementById("options");
+const tEl = document.getElementById("timer");
+const quiz = document.getElementById("quiz");
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  time = 15;
+  tEl.textContent = "Süre: " + time;
+  timerInterval = setInterval(()=>{
+    time--;
+    tEl.textContent = "Süre: " + time;
+    if(time === 0){
+      reveal(-1);
+    }
+  },1000);
+}
+
+function load(){
+  if(current >= questions.length){
+    finish();
+    return;
+  }
+  startTimer();
+  const q = questions[current];
+  qEl.textContent = (current+1) + ". " + q.q;
+  oEl.innerHTML = "";
+  q.options.forEach((opt,i)=>{
+    const d = document.createElement("div");
+    d.className = "option";
+    d.textContent = opt;
+    d.onclick = ()=>reveal(i);
+    oEl.appendChild(d);
+  });
+}
+
+function reveal(sel){
+  clearInterval(timerInterval);
+  const q = questions[current];
+  const ops = document.querySelectorAll(".option");
+  ops.forEach((d,i)=>{
+    d.classList.add("disabled");
+    if(i === q.answer) d.classList.add("correct");
+    if(i === sel && i !== q.answer) d.classList.add("wrong");
+  });
+  if(sel === q.answer) score++;
+  else wrongList.push(q.q);
+  setTimeout(()=>{
+    current++;
+    load();
+  },1200);
+}
+
+function finish(){
+  shuffle(questions);
+  let puan = Math.round((score/questions.length)*100);
+  quiz.innerHTML = `
+    <div class="result">
+      🎉 Deneme Bitti<br><br>
+      Doğru: ${score}<br>
+      Yanlış: ${questions.length-score}<br>
+      Puan: <b>${puan}</b><br><br>
+      <b>Yanlış Sorular:</b><br>
+      ${wrongList.join("<br>") || "Yok"}
+    </div>
+  `;
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+shuffle(questions);
+load();
+</script>
+
 
 let current=0, score=0, time=15, timerInterval;
 let wrongList=[];
