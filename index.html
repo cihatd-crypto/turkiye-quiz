@@ -35,10 +35,9 @@
 </div>
 
 <script>
-js
-  
-let questions = JSON.parse(localStorage.getItem('kpssQuestions')) || [
-  const questions = [
+<script>
+let questions = [
+  {
   { q: "Türkiye Cumhuriyeti'nin başkenti neresidir?", options: ["İstanbul", "Ankara", "İzmir", "Bursa"], answer: 1 },
   { q: "Türkiye Büyük Millet Meclisi hangi yıl açılmıştır?", options: ["1919", "1920", "1921", "1923"], answer: 1 },
   { q: "Türkiye'nin en uzun nehri hangisidir?", options: ["Fırat", "Dicle", "Kızılırmak", "Sakarya"], answer: 2 },
@@ -82,6 +81,7 @@ let questions = JSON.parse(localStorage.getItem('kpssQuestions')) || [
   { q: "Türkiye'nin en büyük barajı hangisidir?", options: ["Atatürk", "Keban", "Karakaya", "Hirfanlı"], answer: 0 },
   { q: "Türkiye'nin ilk uydusu hangisidir?", options: ["Türksat 1B", "Bilsat", "Türksat 1A", "Göktürk"], answer: 2 },
   { q: "Türkiye'de ilk kadın doktor kimdir?", options: ["Safiye Ali", "Halide Edip", "Afet İnan", "Latife Hanım"], answer: 0 }
+  }
 ];
 
 let current=0, score=0, time=15, timerInterval;
